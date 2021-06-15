@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+      <script type="text/javascript" src="https://assets.pyecharts.org/assets/maps/china.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <meta name = "viewpoint" content = "width-device-width, initial-scale=1.0" />
+
+      <title>问答系统</title>
+  </head>
+  <body>
+
+    <nav>
+            <div class = "nav-wrapper ">
+                <a href="#" class = "brand-logo center"> 问吧</a>
+            </div>
+    </nav>
+
+    <div class="row">
+    <div class="col s4">
+<!--         <h3 class = "flow-text center teal-text text-lighten-1">-->
+<!--                    输入框-->
+<!--         </h3>-->
+<!--         <ul class = "collection" id = "user-list"></ul>-->
+
+         <div id="chatbox" class="card blue-grey darken-1">
+             <div class="card-content white-text" id ="messages">
+                 <p class="botText" ><span>请问有什么需要帮助的？</span></p>
+             </div>
+         </div>
+        <div id="userInput" class="card-action white">
+                            <!-- message from -->
+<!--            <form id="message-form">-->
+                <div class ="blockcontent" contentteditable="true">
+                    <input type = "text" id = "textInput" name="msg" placeholder="请输入问题">
+                    <label class="active" for = "textInput">Message</label>
+                </div>
+
+                <div class="right-align">
+                    <button id="buttonInput" class="btn waves-effect waves-light btn-small" type="button" name = "action">SEND
+                        <i class = "material-icons right">send</i>
+                    </button>
+                </div>
+
+<!--            </form>-->
+        </div>
+    </div>
+
+    <div id = 'right_chart' class="col s8" style="width: 1200px;height:850px;">
+    </div>
+
+
+<!--    <div id="left" >-->
+<!--      <div id="chatbox">-->
+<!--        <p class="botText"><span>你好.</span></p>-->
+<!--      </div>-->
+<!--      <div id="userInput"  class="blockcontent" contentteditable="true">-->
+<!--        <input id="textInput" type="text" name="msg" placeholder="Message" >-->
+<!--        <input id="buttonInput" type="submit" value="Send">-->
+<!--      </div>-->
+
+
+<!--    </div>-->
+<!--    <div id="right" style="width: 800px;height:1000px;"></div>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+    <script type="text/javascript">
+        function getBotResponse() {
+
+          var rawText = $("#textInput").val();
+          var userHtml = '<p class="userText"><span>' + rawText + '</span></p>';
+
+          $("#chatbox").append(userHtml);
+          document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
+          $.get("/get", { msg: rawText }).done(function(data) {
+            var botHtml = '<p class="botText"><span>' + data + '</span></p>';
+            $("#chatbox").append(botHtml);
+            document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
+          });
+        }
+
+        function showChart() {
+
+                var rawText = $("#textInput").val();
+                document.getElementById('right_chart').setAttribute('_echarts_instance_', '');
+
+                $.ajax({
+                    type: "GET",
+                    url: "/chart",
+                    dataType: 'json',
+                    data:{'data':rawText},
+                    success: function (result) {
+                        console.log(result.template_id)
+                        if ([10,9,8,7].indexOf(result.template_id)!=-1)
+                        {
+
+                            var chart = echarts.init(document.getElementById('right_chart'), 'white', {renderer: 'canvas'});
+                            var chart_json = eval("(" + result.chart + ")");
+                            chart.setOption(chart_json);
+                        }
+                        else
+                        {
+
+                            var viz;
+                            var config = {
+                                    container_id: "right_chart",
+                                    server_url: "bolt://localhost:7687",
+                                    server_user: "neo4j",
+                                    server_password: "neo4j",
+                                    labels: {
+                                        "COMPANY": {
+                                            "caption": "name",
+                                        },
+                                        "ORGANIZATION": {
+                                            "caption": "name",
+                                        },
+                                        "PERSON": {
+                                            "caption": "name",
+                                        },
+                                        "SHAREHOLDER": {
+                                            "caption": "name",
+                                        },
+                                        "CITY": {
+                                            "caption": "name",
+                                        },
+                                        "FUND": {
+                                            "caption": "name",
+                                        },
+                                        "PROVINCE": {
+                                            "caption": "name",
+                                        },
+                                        "INDUSTRY1": {
+                                            "caption": "name",
+                                        },
+                                        "INDUSTRY2": {
+                                            "caption": "name",
+                                        },
+                                    },
+                                    relationships: {
+                                        "HOLD": {
+                                            "caption": "name",
+                                            "thickness": "share_ratio",
+                                        },
+                                        "FLOAT_HOLD": {
+                                            "caption": "name",
+                                            "thickness": "share_ratio",
+                                        },
+                                        "SERVED_IN": {
+                                            "caption": "name"
+                                        },
+                                        "STAYED_IN": {
+                                            "caption": "name"
+                                        },
+                                        "ADVISE": {
+                                            "caption": "name"
+                                        },
+                                        "CPAFIRM": {
+                                            "caption": "name"
+                                        },
+                                        "LAWFIRM": {
+                                            "caption": "name"
+                                        },
+                                        "INDUSTRY1_OF": {
+                                            "caption": "name"
+                                        },
+                                        "INDUSTRY2_OF": {
+                                            "caption": "name"
+                                        },
+                                        "LOCATE_CITY": {
+                                            "caption": "name"
+                                        },
+                                        "LOCATE_PROVINCE": {
+                                            "caption": "name"
+                                        },
+                                        "TRUST": {
+                                            "caption": "name"
+                                        },
+                                    },
+                                    initial_cypher: result.cql
+
+                                };
+                                viz = new NeoVis.default(config);
+                                viz.render();
+                                }
+
+                    }
+                });
+            }
+
+        $("#textInput").keypress(function(e) {
+            if ((e.which == 13) && document.getElementById("textInput").value != "" ){
+
+                getBotResponse();
+                showChart();
+
+                $("#textInput").val("");
+
+            }
+        });
+        $("#buttonInput").click(function() {
+
+
+            if (document.getElementById("textInput").value != "") {
+                getBotResponse();
+                showChart();
+                $("#textInput").val("");
+            }
+        })
+        //vue,hplus,layer
+
+    </script>
+
+  </body>
+</html>
