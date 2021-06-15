@@ -19,7 +19,9 @@
 下面演示一些问答结果：
 
 查询公司股东
+
 ![image](https://user-images.githubusercontent.com/48402229/121985126-b93e0400-cdc6-11eb-93a5-7df2d5922844.png)
 
 查询财务报表
+
 ![image](https://user-images.githubusercontent.com/48402229/121985132-bf33e500-cdc6-11eb-83fe-e85046aaeaf3.png)
