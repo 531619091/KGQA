@@ -4,4 +4,14 @@
 
 该系统是一个检索型问答系统，系统以数据库的形式把上市公司相关信息进行存储，同时预先设置了一些问题模板，
 当用户提问时，系统判断该问题对应哪个模板，然后使用该模板对应的查询语句在数据库进行查询，将查询结果返回给用户，一轮对话结束。
+流程如下：
+
 ![image](https://user-images.githubusercontent.com/48402229/121984543-babafc80-cdc5-11eb-930b-9de75ca282dd.png)
+
+对话流程中每个模块用到的技术如下：
+
+![image](https://user-images.githubusercontent.com/48402229/121984924-6bc19700-cdc6-11eb-85e8-4140b7817926.png)
+
+下图描述了每个程序文件的作用：
+
+![image](https://user-images.githubusercontent.com/48402229/121984988-8562de80-cdc6-11eb-9dcf-541c43928f61.png)
