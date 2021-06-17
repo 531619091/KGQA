@@ -1,4 +1,6 @@
 # KGQA
+如有问题欢迎联系531619091@qq.com
+
 这是一个知识图谱问答系统，使用的图数据库为neo4j
 本系统用到的bert模型取自https://github.com/valuesimplex/FinBERT
 
